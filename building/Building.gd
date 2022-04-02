@@ -9,6 +9,7 @@ var _paths: Dictionary = {
 }
 
 var _coords: Vector2 = Vector2.ZERO
+export(GameData.Buildings) var building_type = 0
 
 
 # Called when the node enters the scene tree for the first time.
@@ -16,21 +17,28 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 
-func update_links(coord: Vector2) -> void:
+# Update the cell with the new connections. Change sprite etc. 
+func update_links() -> void:
 	pass
+	
+	
+func set_path(dir: Vector2, building) -> void:
+	_paths[dir] = building
 
 
 func construct(coord: Vector2, data: Dictionary) -> void:
 	_coords = coord
 	position = _coords * GameData.CELL_SIZE
 	# Set valid paths
-	_paths[Vector2.LEFT] = data.get(_coords + Vector2.LEFT)
-	_paths[Vector2.RIGHT] = data.get(_coords + Vector2.RIGHT)
-	_paths[Vector2.UP] = data.get(_coords + Vector2.UP)
-	_paths[Vector2.DOWN] = data.get(_coords + Vector2.DOWN)
+	set_path(Vector2.LEFT, data.get(_coords + Vector2.LEFT))
+	set_path(Vector2.RIGHT, data.get(_coords + Vector2.RIGHT))
+	set_path(Vector2.UP, data.get(_coords + Vector2.UP))
+	set_path(Vector2.DOWN, data.get(_coords + Vector2.DOWN))
+	update_links()
 	
 	# Update existing buildings with new entry
-	data.get(_coords + Vector2.LEFT, self).update_links(_coords)
-	data.get(_coords + Vector2.RIGHT, self).update_links(_coords)
-	data.get(_coords + Vector2.UP, self).update_links(_coords)
-	data.get(_coords + Vector2.DOWN, self).update_links(_coords)
+	for p in _paths.keys():
+		if _paths.get(p) != null:
+			_paths[p].set_path(-p, self)
+			_paths[p].update_links()
+
