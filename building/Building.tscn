@@ -3,7 +3,7 @@
 [ext_resource path="res://building/Building.gd" type="Script" id=1]
 [ext_resource path="res://assets/art/building_template.png" type="Texture" id=2]
 
-[node name="Building" type="Node2D"]
+[node name="Building" type="Node2D" groups=["camera_shaker"]]
 script = ExtResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]

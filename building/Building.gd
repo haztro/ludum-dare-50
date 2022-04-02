@@ -1,5 +1,6 @@
 extends Node2D
 
+signal camera_shake_request
 
 var _paths: Dictionary = {
 	Vector2.LEFT: null,
@@ -14,7 +15,7 @@ export(GameData.Buildings) var building_type = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	pass
 
 
 # Update the cell with the new connections. Change sprite etc. 
@@ -41,4 +42,6 @@ func construct(coord: Vector2, data: Dictionary) -> void:
 		if _paths.get(p) != null:
 			_paths[p].set_path(-p, self)
 			_paths[p].update_links()
+			
+	emit_signal("camera_shake_request")
 

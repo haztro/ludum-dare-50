@@ -8,13 +8,20 @@ func _ready() -> void:
 
 
 func update_links() -> void:
-	if _paths[Vector2.UP] == null:
-		$Sprite.region_rect.position.x = 0
+	
+	if _paths[Vector2.UP] != null:
+		$Sprite.region_rect.position.x = 48
 	else:
-		if _paths[Vector2.DOWN] != null:
-			if _paths[Vector2.DOWN].building_type == GameData.Buildings.PATH:
-				$Sprite.region_rect.position.x = 16
-			elif _paths[Vector2.DOWN].building_type == GameData.Buildings.HOUSE:
-				$Sprite.region_rect.position.x = 32
-		else:
-			$Sprite.region_rect.position.x = 32
+		$Sprite.region_rect.position.x = 0
+	
+	# Side connections
+	if _paths[Vector2.LEFT] != null and _paths[Vector2.RIGHT] != null:
+		pass
+	elif _paths[Vector2.LEFT] == null and _paths[Vector2.RIGHT] != null:
+		$Sprite.region_rect.position.x += 16
+	elif _paths[Vector2.LEFT] != null and _paths[Vector2.RIGHT] == null:
+		$Sprite.region_rect.position.x += 32
+	elif _paths[Vector2.LEFT] == null and _paths[Vector2.RIGHT] == null:
+		$Sprite.region_rect.position.x = 96
+		
+
