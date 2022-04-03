@@ -17,7 +17,6 @@ var _agent_scene = preload("res://agent/Agent.tscn")
 
 var a_star = AStar.new()
 var a_star_id: int = 0
-
 var a_star_houses = AStar.new()
 
 var _noise = OpenSimplexNoise.new()
@@ -85,9 +84,6 @@ func add_agent(coord: Vector2):
 	var agent = _agent_scene.instance()
 	agent._coord = coord
 	agent.position = coord * GameData.CELL_SIZE
-	agent.buildings = _buildings
-	agent.a_star_path = a_star
-	agent.a_star_houses = a_star_houses
 	_agents.add_child(agent)
 
 
@@ -112,12 +108,12 @@ func update_land(max_height: int) -> void:
 
 
 # Debug Draw 
-#func _draw() -> void:
-#	for i in range(a_star_id - 1):
-#		var connections = a_star.get_point_connections(i)
-#		var p1 = a_star.get_point_position(i) * GameData.CELL_SIZE + Vector3(8, 8, 0)
-#		for j in connections:
-#			var p2 = a_star.get_point_position(j) * GameData.CELL_SIZE + Vector3(8, 8, 0)
-#			draw_line(Vector2(p1.x, p1.y), Vector2(p2.x, p2.y), Color(1, 1, 1, 1))
+func _draw() -> void:
+	for i in range(a_star_id - 1):
+		var connections = a_star.get_point_connections(i)
+		var p1 = a_star.get_point_position(i) * GameData.CELL_SIZE + Vector3(8, 8, 0)
+		for j in connections:
+			var p2 = a_star.get_point_position(j) * GameData.CELL_SIZE + Vector3(8, 8, 0)
+			draw_line(Vector2(p1.x, p1.y), Vector2(p2.x, p2.y), Color(1, 1, 1, 1))
 	
 	

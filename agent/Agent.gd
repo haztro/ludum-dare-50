@@ -59,10 +59,7 @@ class StateSearch extends State:
 		state = GameData.Agent.SEARCH
 	
 	func entry_actions():
-		dest_coord = agent.a_star_houses.get_closest_point(Vector3(agent._coord.x, agent._coord.y, 0), true)
-		var current_id = agent.buildings[agent.coord].a_star_id
-		var dest_id = agent.buildings[dest_coord].a_star_id
-		agent._path = agent.a_star_houses.get_point_path(current_id, dest_id)
+		pass
 		
 	func exit_actions():
 		pass
