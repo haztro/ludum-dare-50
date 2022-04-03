@@ -9,19 +9,19 @@ func _ready() -> void:
 
 func update_links() -> void:
 	
-	if _paths[Vector2.UP] != null:
+	if _neighbours[Vector2.UP] != null:
 		$Sprite.region_rect.position.x = 48
 	else:
 		$Sprite.region_rect.position.x = 0
 	
 	# Side connections
-	if _paths[Vector2.LEFT] != null and _paths[Vector2.RIGHT] != null:
+	if _neighbours[Vector2.LEFT] != null and _neighbours[Vector2.RIGHT] != null:
 		pass
-	elif _paths[Vector2.LEFT] == null and _paths[Vector2.RIGHT] != null:
+	elif _neighbours[Vector2.LEFT] == null and _neighbours[Vector2.RIGHT] != null:
 		$Sprite.region_rect.position.x += 16
-	elif _paths[Vector2.LEFT] != null and _paths[Vector2.RIGHT] == null:
+	elif _neighbours[Vector2.LEFT] != null and _neighbours[Vector2.RIGHT] == null:
 		$Sprite.region_rect.position.x += 32
-	elif _paths[Vector2.LEFT] == null and _paths[Vector2.RIGHT] == null:
+	elif _neighbours[Vector2.LEFT] == null and _neighbours[Vector2.RIGHT] == null:
 		$Sprite.region_rect.position.x = 96
 		
 

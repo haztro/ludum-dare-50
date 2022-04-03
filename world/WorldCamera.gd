@@ -17,6 +17,9 @@ func _ready():
 func _process(_delta):
 	shake_camera()
 	get_direction()
+	
+	limit_top = GameData.current_max_height.y * GameData.CELL_SIZE - GameData.TOP_CAMERA_PAD
+	
 	velocity = move.get_velocity(direction)
 	position += velocity * _delta
 
@@ -24,14 +27,20 @@ func _process(_delta):
 # Get movement direction from key presses
 func get_direction() -> void:
 	direction = Vector2(0, 0)
-	if Input.is_action_pressed("right"):
-		direction.x += 1
-	if Input.is_action_pressed("left"):
-		direction.x -= 1
+#	if Input.is_action_pressed("right"):
+#		direction.x += 1
+#	if Input.is_action_pressed("left"):
+#		direction.x -= 1
 	if Input.is_action_pressed("down"):
 		direction.y += 1
 	if Input.is_action_pressed("up"):
 		direction.y -= 1
+		
+	if position.y > limit_bottom/2:
+		direction.y = -1
+	elif position.y < limit_top + get_viewport().size.y / 2:
+		direction.y = 1
+		
 	direction = direction.normalized()
 	
 

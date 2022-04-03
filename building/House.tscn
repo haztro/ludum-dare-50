@@ -4,5 +4,5 @@
 [ext_resource path="res://building/House.gd" type="Script" id=2]
 
 [node name="House" instance=ExtResource( 1 )]
-z_index = 1
+z_index = -1
 script = ExtResource( 2 )

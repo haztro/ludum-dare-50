@@ -14,7 +14,7 @@ func update_cursor(coord: Vector2, data: Dictionary, force=false) -> void:
 	if force or coord != _coords:
 		_coords = coord
 		position = _coords * GameData.CELL_SIZE
-		if data.has(_coords):
+		if !data.has(_coords):
 			$Sprite.modulate = Color(0.757813, 0.156891, 0.156891)
 			_valid_move = false
 		else:
