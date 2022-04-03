@@ -16,8 +16,8 @@ var _path_scene = preload("res://building/Path.tscn")
 var _agent_scene = preload("res://agent/Agent.tscn")
 
 var a_star = AStar.new()
+var a_star2 = AStar.new()
 var a_star_id: int = 0
-var a_star_houses = AStar.new()
 
 var _noise = OpenSimplexNoise.new()
 var _land_height = 11
@@ -43,11 +43,13 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta) -> void:
 	_cursor.update_cursor(_mouse_coord, _buildable_cells)
-
+	if DEBUG_MODE:
+		update()
 	
 func _input(event) -> void:
 	# Get the grid coordinate from mouse position
 	_mouse_coord = (get_global_mouse_position() / GameData.CELL_SIZE).floor()
+	print(_mouse_coord)
 	if _cursor.is_valid_build():	
 		# CHeck for mouse click to build. 
 		if Input.is_action_just_pressed("build"):
@@ -65,21 +67,30 @@ func build(coord: Vector2, building: int) -> void:
 			new_building = _path_scene.instance()
 		GameData.Buildings.HOUSE:
 			new_building = _house_scene.instance()
+			new_building.connect("vacancy", self, "on_house_vacancy")
 
 	# Add new building
 	new_building.connect("camera_shake_request", _camera, "_camera_shake_requested")
 	new_building.a_star_id = a_star_id
+	new_building.a_star = a_star
+	new_building.a_star2 = a_star2
 	a_star_id += 1
-	new_building.construct(coord, _buildings, _buildable_cells, a_star, a_star_houses)
+	new_building.construct(coord, _buildings, _buildable_cells)
 	
 	add_child(new_building)
 	_buildings[coord] = new_building
 	
+#	on_house_vacancy(coord, new_building.a_star_id)
+	
 	GameData.update_max_height(coord)
 	update_land(GameData.current_max_height.y)
 	
-	if DEBUG_MODE:
-		update()
+
+
+
+func on_house_vacancy(coord, id) -> void:
+	for a in _agents.get_children():
+		a.search(coord, id)
 
 
 func add_agent(coord: Vector2):
@@ -87,8 +98,8 @@ func add_agent(coord: Vector2):
 	agent._coords = coord
 	agent.position = coord * GameData.CELL_SIZE
 	agent.buildings = _buildings
-	agent.a_star_path = a_star
-	agent.a_star_houses = a_star_houses
+	agent.a_star = a_star
+	agent.a_star2 = a_star2
 	_agents.add_child(agent)
 
 

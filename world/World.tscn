@@ -57,10 +57,6 @@ tile_data = PoolIntArray( 786431, 0, 8, 720896, 0, 65547, 720897, 0, 65547, 7208
 position = Vector2( 8, 9 )
 z_index = -2
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="."]
-position = Vector2( 115, 49 )
-copy_mode = 2
-
 [node name="Water" parent="." instance=ExtResource( 5 )]
-modulate = Color( 0.505882, 0.921569, 0.705882, 1 )
-position = Vector2( 129, 152 )
+visible = false
+position = Vector2( 128, 198 )

@@ -6,3 +6,4 @@
 [node name="House" instance=ExtResource( 1 )]
 z_index = -1
 script = ExtResource( 2 )
+building_type = 1

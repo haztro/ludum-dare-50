@@ -14,7 +14,8 @@ var _paths: Dictionary = {}
 var _coords: Vector2 = Vector2.ZERO
 export(GameData.Buildings) var building_type = 0
 
-var a_star
+var a_star = null
+var a_star2 = null
 var a_star_id: int = 0
 
 var occupants: Array = []
@@ -34,7 +35,7 @@ func set_path(dir: Vector2, building) -> void:
 	_neighbours[dir] = building
 
 
-func construct(coord: Vector2, data: Dictionary, buildable: Dictionary, a_star, a_star_houses) -> void:
+func construct(coord: Vector2, data: Dictionary, buildable: Dictionary) -> void:
 	_coords = coord
 	position = _coords * GameData.CELL_SIZE
 	# Set valid paths
@@ -46,8 +47,10 @@ func construct(coord: Vector2, data: Dictionary, buildable: Dictionary, a_star, 
 	
 	# Add point for pathfinding
 	a_star.add_point(a_star_id, Vector3(_coords.x, _coords.y, 0))
-	if building_type == GameData.Buildings.HOUSE:
-		a_star_houses.add_point(a_star_id, Vector3(_coords.x, _coords.y, 0))
+	a_star2.add_point(a_star_id, Vector3(_coords.x, _coords.y, 0))
+	
+	if building_type == GameData.Buildings.PATH:
+		a_star2.set_point_disabled(a_star_id, true)
 	
 	buildable.erase(_coords)
 	
@@ -56,7 +59,9 @@ func construct(coord: Vector2, data: Dictionary, buildable: Dictionary, a_star, 
 		if _neighbours.get(p) != null:
 			# Make new connections for pathfinding
 			if !a_star.are_points_connected(a_star_id, _neighbours[p].a_star_id):
-				a_star.connect_points(a_star_id, _neighbours[p].a_star_id)
+				if !(building_type == GameData.Buildings.HOUSE and _neighbours[p].building_type == GameData.Buildings.HOUSE):
+					a_star.connect_points(a_star_id, _neighbours[p].a_star_id)
+					a_star2.connect_points(a_star_id, _neighbours[p].a_star_id)
 				
 			_neighbours[p].set_path(-p, self)
 			_neighbours[p].update_links()
@@ -72,8 +77,10 @@ func get_num_occupants() -> int:
 
 
 func add_occupant(occupant) -> void:
-	pass
+	occupants.append(occupant)
+	occupant.building = self
 	
 	
 func remove_occupant(occupant) -> void:
-	pass
+	occupants.erase(occupant)
+	occupant.building = null
