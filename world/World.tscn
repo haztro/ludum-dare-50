@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://world/World.gd" type="Script" id=1]
 [ext_resource path="res://world/WorldCamera.gd" type="Script" id=2]
 [ext_resource path="res://ui/Cursor.tscn" type="PackedScene" id=3]
 [ext_resource path="res://assets/art/land_tiles.png" type="Texture" id=4]
+[ext_resource path="res://world/Water.tscn" type="PackedScene" id=5]
 
 [sub_resource type="TileSet" id=1]
 0/name = "land_tiles.png 0"
@@ -55,3 +56,11 @@ tile_data = PoolIntArray( 786431, 0, 8, 720896, 0, 65547, 720897, 0, 65547, 7208
 [node name="Agents" type="Node2D" parent="."]
 position = Vector2( 8, 9 )
 z_index = -2
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="."]
+position = Vector2( 115, 49 )
+copy_mode = 2
+
+[node name="Water" parent="." instance=ExtResource( 5 )]
+modulate = Color( 0.505882, 0.921569, 0.705882, 1 )
+position = Vector2( 129, 152 )

@@ -11,3 +11,5 @@ texture = ExtResource( 2 )
 centered = false
 region_enabled = true
 region_rect = Rect2( 0, 0, 3, 6 )
+
+[node name="Tween" type="Tween" parent="."]

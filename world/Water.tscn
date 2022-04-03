@@ -1,0 +1,58 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/art/water.png" type="Texture" id=1]
+[ext_resource path="res://world/Water.gd" type="Script" id=2]
+
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+
+uniform float speed : hint_range(0.0, 5.0);
+uniform float magnitude : hint_range(0.0, 0.05);
+uniform float direction : hint_range(0.0, 20.0);
+uniform float ripple : hint_range(0.0, 20.0);
+
+
+float wobble(float uv, float t, float y)
+{
+	float w = uv + magnitude * sin(speed * t + ripple * uv + direction * y);
+	return w;
+}
+
+void fragment()
+{
+	vec2 uv = vec2(wobble(SCREEN_UV.x, TIME, SCREEN_UV.y), SCREEN_UV.y);
+	vec4 col = texture(SCREEN_TEXTURE, uv);
+	vec4 col1 = texture(TEXTURE, UV);
+
+	if (col1.a == 0.0) {
+		col.a = 0.0;
+	}
+	COLOR = col * col1;
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 3 )
+shader_param/speed = 2.226
+shader_param/magnitude = 0.004
+shader_param/direction = 8.647
+shader_param/ripple = 15.196
+
+[node name="Water" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Water" type="Sprite" parent="."]
+visible = false
+texture = ExtResource( 1 )
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="."]
+copy_mode = 2
+rect = Rect2( 0, 0, 256, 144 )
+
+[node name="Buffer" type="Sprite" parent="."]
+light_mask = 2
+material = SubResource( 2 )
+texture = ExtResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

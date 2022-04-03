@@ -8,7 +8,7 @@ enum Agent {IDLE = 0, SEARCH = 1, TRANSIT = 2}
 
 var STARTING_POPULATION = 10
 var HOUSE_CAPACITY = 5
-
+var RISE_RATE = 1 # pixel per second
 
 var current_max_height: Vector2 = Vector2.ZERO
 

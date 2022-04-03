@@ -37,6 +37,8 @@ func _ready() -> void:
 	for i in range(GameData.STARTING_POPULATION):
 		add_agent(Vector2(floor(randf() * 10 + 3), 6))
 
+	$Water.start_rise()
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta) -> void:
@@ -82,8 +84,11 @@ func build(coord: Vector2, building: int) -> void:
 
 func add_agent(coord: Vector2):
 	var agent = _agent_scene.instance()
-	agent._coord = coord
+	agent._coords = coord
 	agent.position = coord * GameData.CELL_SIZE
+	agent.buildings = _buildings
+	agent.a_star_path = a_star
+	agent.a_star_houses = a_star_houses
 	_agents.add_child(agent)
 
 

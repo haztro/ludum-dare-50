@@ -86,10 +86,11 @@ class StateTransit extends State:
 var buildings = null
 var a_star_path = null
 var a_star_houses = null
-var _coord = Vector2.ZERO
+var _coords = Vector2.ZERO
 var brain = Brain.new(self)
 
 var _path: Array = []
+var _path_index: int = 0
 
 
 # Called when the node enters the scene tree for the first time.
@@ -100,3 +101,23 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
+	
+
+func get_destination() -> int:
+	var dest_id = a_star_houses.get_closest_point(_coords)
+	return dest_id
+	
+	
+func get_transit_path(dest_id: int) -> Array:
+	var current_id = buildings[_coords].a_star_id
+	var path = a_star_path.get_id_path(current_id, dest_id)
+	return path
+	
+	
+func traverse_path():
+	pass
+	
+	
+func move(dest: Vector2):
+	pass
+	
