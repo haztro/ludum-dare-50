@@ -5,6 +5,7 @@ export(bool) var DEBUG_MODE = true
 onready var _camera = get_node("Camera2D")
 onready var _cursor = get_node("Cursor")
 onready var _land_tiles = get_node("Land")
+onready var _agents = get_node("Agents")
 
 var _buildings: Dictionary = {}
 var _buildable_cells: Dictionary = {}
@@ -12,9 +13,12 @@ var _mouse_coord: Vector2 = Vector2.ZERO
 
 var _house_scene = preload("res://building/House.tscn")
 var _path_scene = preload("res://building/Path.tscn")
+var _agent_scene = preload("res://agent/Agent.tscn")
 
 var a_star = AStar.new()
 var a_star_id: int = 0
+
+var a_star_houses = AStar.new()
 
 var _noise = OpenSimplexNoise.new()
 var _land_height = 11
@@ -26,10 +30,13 @@ func _ready() -> void:
 	_noise.octaves = 1
 	_noise.period = 7
 	
-	for i in range(3, 13):
-		_buildable_cells[Vector2(i, 6)] = null
+	for i in range(2, 14):
+		build(Vector2(i, 6), GameData.Buildings.PATH)
 		
 	update_land(-3)
+	
+	for i in range(GameData.STARTING_POPULATION):
+		add_agent(Vector2(floor(randf() * 10 + 3), 6))
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -40,7 +47,6 @@ func _process(delta) -> void:
 func _input(event) -> void:
 	# Get the grid coordinate from mouse position
 	_mouse_coord = (get_global_mouse_position() / GameData.CELL_SIZE).floor()
-	
 	if _cursor.is_valid_build():	
 		# CHeck for mouse click to build. 
 		if Input.is_action_just_pressed("build"):
@@ -63,10 +69,11 @@ func build(coord: Vector2, building: int) -> void:
 	new_building.connect("camera_shake_request", _camera, "_camera_shake_requested")
 	new_building.a_star_id = a_star_id
 	a_star_id += 1
-	new_building.construct(coord, _buildings, _buildable_cells, a_star)
+	new_building.construct(coord, _buildings, _buildable_cells, a_star, a_star_houses)
 	
 	add_child(new_building)
 	_buildings[coord] = new_building
+	
 	GameData.update_max_height(coord)
 	update_land(GameData.current_max_height.y)
 	
@@ -74,9 +81,19 @@ func build(coord: Vector2, building: int) -> void:
 		update()
 
 
+func add_agent(coord: Vector2):
+	var agent = _agent_scene.instance()
+	agent._coord = coord
+	agent.position = coord * GameData.CELL_SIZE
+	agent.buildings = _buildings
+	agent.a_star_path = a_star
+	agent.a_star_houses = a_star_houses
+	_agents.add_child(agent)
+
+
 func update_land(max_height: int) -> void:
 	while _land_height > max_height*2 - 4:
-		var val = floor((4 * _noise.get_noise_2d(_land_height, 0)) + 4)
+		var val = min(4, floor((4 * _noise.get_noise_2d(_land_height, 0)) + 4))
 		# Left hand side 
 		_land_tiles.set_cell(-1, _land_height, 0)
 		_land_tiles.set_cell(0, _land_height, 0)
@@ -84,8 +101,7 @@ func update_land(max_height: int) -> void:
 			_land_tiles.set_cell(i, _land_height, 0)
 		
 		#RIght hand side
-		val = floor((4 * _noise.get_noise_2d(_land_height, 20)) + 4)
-		print(val)
+		val = min(4, floor((4 * _noise.get_noise_2d(_land_height, 20)) + 4))
 		_land_tiles.set_cell(32, _land_height, 0)
 		_land_tiles.set_cell(31, _land_height, 0)
 		for i in range(33 - val, 32):
@@ -96,12 +112,12 @@ func update_land(max_height: int) -> void:
 
 
 # Debug Draw 
-func _draw() -> void:
-	for i in range(a_star_id - 1):
-		var connections = a_star.get_point_connections(i)
-		var p1 = a_star.get_point_position(i) * GameData.CELL_SIZE + Vector3(8, 8, 0)
-		for j in connections:
-			var p2 = a_star.get_point_position(j) * GameData.CELL_SIZE + Vector3(8, 8, 0)
-			draw_line(Vector2(p1.x, p1.y), Vector2(p2.x, p2.y), Color(1, 1, 1, 1))
+#func _draw() -> void:
+#	for i in range(a_star_id - 1):
+#		var connections = a_star.get_point_connections(i)
+#		var p1 = a_star.get_point_position(i) * GameData.CELL_SIZE + Vector3(8, 8, 0)
+#		for j in connections:
+#			var p2 = a_star.get_point_position(j) * GameData.CELL_SIZE + Vector3(8, 8, 0)
+#			draw_line(Vector2(p1.x, p1.y), Vector2(p2.x, p2.y), Color(1, 1, 1, 1))
 	
 	

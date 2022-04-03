@@ -16,6 +16,8 @@ export(GameData.Buildings) var building_type = 0
 
 var a_star_id: int = 0
 
+var occupants: Array = []
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -31,7 +33,7 @@ func set_path(dir: Vector2, building) -> void:
 	_neighbours[dir] = building
 
 
-func construct(coord: Vector2, data: Dictionary, buildable: Dictionary, a_star) -> void:
+func construct(coord: Vector2, data: Dictionary, buildable: Dictionary, a_star, a_star_houses) -> void:
 	_coords = coord
 	position = _coords * GameData.CELL_SIZE
 	# Set valid paths
@@ -45,6 +47,8 @@ func construct(coord: Vector2, data: Dictionary, buildable: Dictionary, a_star) 
 	
 	# Add point for pathfinding
 	a_star.add_point(a_star_id, Vector3(_coords.x, _coords.y, 0))
+	if building_type == GameData.Buildings.HOUSE:
+		a_star_houses.add_point(a_star_id, Vector3(_coords.x, _coords.y, 0))
 	
 	# Update existing buildings with new entry
 	for p in _neighbours.keys():
@@ -61,3 +65,14 @@ func construct(coord: Vector2, data: Dictionary, buildable: Dictionary, a_star) 
 			
 	emit_signal("camera_shake_request")
 
+
+func get_num_occupants() -> int:
+	return occupants.size()
+
+
+func add_occupant(occupant) -> void:
+	pass
+	
+	
+func remove_occupant(occupant) -> void:
+	pass
