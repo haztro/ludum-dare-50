@@ -31,4 +31,3 @@ func _on_Timer_timeout():
 
 func _on_Timer2_timeout():
 	time = max(0.1, time - 0.08)
-	print(time)

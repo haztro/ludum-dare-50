@@ -20,7 +20,7 @@ func _process(delta):
 func show_button():
 	$Control/Button.disabled = false
 	$Control/Button.visible = true
-
+#	pass
 
 func _on_Button_pressed():
 	GameData.restart()

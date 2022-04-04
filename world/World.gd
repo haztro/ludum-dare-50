@@ -30,6 +30,7 @@ var _platforms = {}
 func _ready() -> void:
 	GameData.connect("game_over", self, "on_game_over")
 	
+	randomize()
 	_noise.seed = randi()
 	_noise.octaves = 1
 	_noise.period = 7
@@ -84,12 +85,14 @@ func check_platforms(coords: Vector2):
 			for a in _platforms[p].agents:
 				a.registered = true
 				GameData.add_agent()
+			_platforms[p].hide_mark()
 			a_star.connect_points(_platforms[p].a_star_id, _buildings[coords].a_star_id)
 			AudioManager.play("saved")
 		elif p == coords + Vector2.RIGHT:
 			for a in _platforms[p].agents:
 				a.registered = true
 				GameData.add_agent()
+			_platforms[p].hide_mark()
 			a_star.connect_points(_platforms[p].a_star_id, _buildings[coords].a_star_id)
 			AudioManager.play("saved")
 			print(a_star.get_point_position(_platforms[p].a_star_id))

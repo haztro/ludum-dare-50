@@ -22,6 +22,11 @@ func set_path(dir: Vector2, building) -> void:
 
 func construct():
 	pass
+	
+	
+func hide_mark():
+	$Timer.stop()
+	$Sprite/Sprite2.visible = false
 
 
 func _on_Timer_timeout():
