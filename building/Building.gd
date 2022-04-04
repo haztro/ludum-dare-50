@@ -18,8 +18,6 @@ var a_star = null
 var a_star2 = null
 var a_star_id: int = 0
 
-var occupants: Array = []
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -33,6 +31,13 @@ func update_links() -> void:
 	
 func set_path(dir: Vector2, building) -> void:
 	_neighbours[dir] = building
+	
+	
+func clean_up() -> void:
+	# Update existing buildings with new entry
+	for p in _neighbours.keys():
+		if _neighbours.get(p) != null:
+			_neighbours[p]._neighbours[-p] = null
 
 
 func construct(coord: Vector2, data: Dictionary, buildable: Dictionary) -> void:
@@ -70,17 +75,3 @@ func construct(coord: Vector2, data: Dictionary, buildable: Dictionary) -> void:
 			buildable[_coords + p] = null
 			
 	emit_signal("camera_shake_request")
-
-
-func get_num_occupants() -> int:
-	return occupants.size()
-
-
-func add_occupant(occupant) -> void:
-	occupants.append(occupant)
-	occupant.building = self
-	
-	
-func remove_occupant(occupant) -> void:
-	occupants.erase(occupant)
-	occupant.building = null

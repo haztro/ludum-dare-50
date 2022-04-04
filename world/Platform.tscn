@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://assets/art/platform.png" type="Texture" id=1]
+[ext_resource path="res://world/Platform.gd" type="Script" id=2]
+[ext_resource path="res://assets/art/exclaim.png" type="Texture" id=3]
+
+[node name="Platform" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+z_index = -1
+texture = ExtResource( 1 )
+centered = false
+region_rect = Rect2( 0, 0, 22, 17 )
+
+[node name="Sprite2" type="Sprite" parent="Sprite"]
+modulate = Color( 0.976471, 0.807843, 1, 1 )
+position = Vector2( 42, -1 )
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 3, 4 )
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
