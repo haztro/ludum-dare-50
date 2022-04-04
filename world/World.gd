@@ -62,9 +62,12 @@ func _process(delta) -> void:
 #	print(floor((_camera.position.y - 72) / GameData.CELL_SIZE))
 	if GameData.update_max_height(floor((_camera.position.y - 72) / GameData.CELL_SIZE)):
 		update_land(GameData.current_max_height)
+
+	if Input.is_action_just_pressed("fullscreen"):
+		OS.window_fullscreen = !OS.window_fullscreen
 	
-	if DEBUG_MODE:
-		update()
+#	if DEBUG_MODE:
+#		update()
 	
 func _input(event) -> void:
 	# Get the grid coordinate from mouse position
